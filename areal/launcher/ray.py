@@ -518,7 +518,7 @@ def ray_main(config, run_id: int = 0):
         tms_env_vars = get_tms_env_vars()
     else:
         tms_env_vars = {}
-
+    print(f"allocation_mode: {allocation_mode.type_}")
     if allocation_mode.type_ == AllocationType.DECOUPLED_EVAL:
         trainer_n_nodes = 1
         gpus_per_task = 0

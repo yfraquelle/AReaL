@@ -421,7 +421,7 @@ class AsyncCompletionsWithReward(BaseAsyncCompletions):
         tool_calls = None
         try:
             if (is_omitted(tool_choice) or tool_choice != "none") and tools_list:
-                tool_calls, output_text, response.stop_reason = process_tool_calls(
+                tool_calls, think_text, content_text, response.stop_reason = process_tool_calls(
                     output_text,
                     tools_list,
                     self.tool_call_parser,
@@ -436,10 +436,11 @@ class AsyncCompletionsWithReward(BaseAsyncCompletions):
 
         # Create proper ChatCompletion object with all required fields
         output_message = ChatCompletionMessage(
-            content=output_text,
+            content=content_text,
             role="assistant",
             # For all empty tool calls, set tool_calls=None
             tool_calls=tool_calls or None,
+            reasoning_content=think_text,
         )
         chat_completion = ChatCompletion(
             id=completion_id,
@@ -683,6 +684,7 @@ class AsyncResponsesWithReward(BaseAsyncResponses):
         gconfig = GenerationHyperparameters(
             n_samples=1,
             temperature=temp,
+            max_tokens=max_tokens,
             max_new_tokens=max_new_tokens,
             top_p=top_p_val,
             stop=stop,
@@ -709,7 +711,7 @@ class AsyncResponsesWithReward(BaseAsyncResponses):
         tool_calls = None
         try:
             if (is_omitted(tool_choice) or tool_choice != "none") and tools_list:
-                tool_calls, output_text, engine_resp.stop_reason = process_tool_calls(
+                tool_calls, think_text, context_text, engine_resp.stop_reason = process_tool_calls(
                     output_text,
                     tools_list,
                     self.tool_call_parser,

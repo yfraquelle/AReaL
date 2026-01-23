@@ -116,11 +116,11 @@ def process_tool_calls(
                     for call_info in call_info_list
                 ]
 
-            return tool_calls, reasoning_text + content_text, finish_reason
+            return tool_calls, reasoning_text, content_text, finish_reason
         except Exception as e:
             logger.error(f"Tool call parsing error: {e}")
             traceback.print_exc()
             # Return error but don't fail the whole request
-            return None, text, finish_reason
+            return None, reasoning_text, content_text, finish_reason
 
-    return None, text, finish_reason
+    return None, reasoning_text, content_text, finish_reason
